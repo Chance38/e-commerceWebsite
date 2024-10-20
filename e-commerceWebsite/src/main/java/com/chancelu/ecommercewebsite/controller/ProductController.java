@@ -25,11 +25,17 @@ public class ProductController {
 //            選擇商品類型, 這個參數是個可選參數
             @RequestParam(required = false) ProductCategory category,
 //            關鍵字查詢，這個參數是個可選參數
-            @RequestParam(required = false) String search
+            @RequestParam(required = false) String search,
+//            根據創建日期來排序
+            @RequestParam(defaultValue = "created_date")String orderBy,
+//            使用降序來排序
+            @RequestParam(defaultValue = "desc")String sort
     ) {
         ProductQueryParams params = new ProductQueryParams();
         params.setCategory(category);
         params.setSearch(search);
+        params.setOrderBy(orderBy);
+        params.setSort(sort);
 
         List<Product> productList = productService.getProducts(params);
 

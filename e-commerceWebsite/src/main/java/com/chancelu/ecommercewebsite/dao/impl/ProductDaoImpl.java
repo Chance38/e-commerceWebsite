@@ -44,6 +44,8 @@ public class ProductDaoImpl implements ProductDao {
             sql += " AND product_name LIKE :search";
             map.put("search", "%" + params.getSearch() + "%");
         }
+//      有defaultValue, 故不用寫 if 判斷式, 預設不會是NULL
+        sql += " ORDER BY " + params.getOrderBy() + " " + params.getSort();
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
