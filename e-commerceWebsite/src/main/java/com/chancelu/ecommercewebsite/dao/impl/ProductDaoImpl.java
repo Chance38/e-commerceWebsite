@@ -1,12 +1,11 @@
 package com.chancelu.ecommercewebsite.dao.impl;
 
-import com.chancelu.ecommercewebsite.constant.ProductCategory;
 import com.chancelu.ecommercewebsite.dao.ProductDao;
+import com.chancelu.ecommercewebsite.dto.ProductQueryParams;
 import com.chancelu.ecommercewebsite.dto.ProductRequest;
 import com.chancelu.ecommercewebsite.model.Product;
 import com.chancelu.ecommercewebsite.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,7 +24,7 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search) {
+    public List<Product> getProducts(ProductQueryParams params) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
                 "created_date, last_modified_date " +
                 "FROM product WHERE 1=1";
@@ -33,17 +32,17 @@ public class ProductDaoImpl implements ProductDao {
 
         Map<String, Object> map = new HashMap<>();
 
-        if (category != null) {
+        if (params.getCategory() != null) {
 //            記得AND前一點要預留空白鍵
             sql += " AND category = :category";
 //            category類型為Enum, 先用name method將Enum類型轉成字串, 再加進map裡
-            map.put("category", category.name());
+            map.put("category", params.getCategory().name());
         }
 
-        if (search != null) {
+        if (params.getSearch() != null) {
 //            記得AND前一點要預留空白鍵, LIKE -> 模糊查詢, 在要查詢的"search"前後加%, 會搜尋名字內有包含"search"的字串
             sql += " AND product_name LIKE :search";
-            map.put("search", "%" + search + "%");
+            map.put("search", "%" + params.getSearch() + "%");
         }
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());

@@ -1,7 +1,7 @@
 package com.chancelu.ecommercewebsite.service.impl;
 
-import com.chancelu.ecommercewebsite.constant.ProductCategory;
 import com.chancelu.ecommercewebsite.dao.ProductDao;
+import com.chancelu.ecommercewebsite.dto.ProductQueryParams;
 import com.chancelu.ecommercewebsite.dto.ProductRequest;
 import com.chancelu.ecommercewebsite.model.Product;
 import com.chancelu.ecommercewebsite.service.ProductService;
@@ -17,8 +17,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search) {
-        return productDao.getProducts(category, search);
+    public List<Product> getProducts(ProductQueryParams params) {
+        return productDao.getProducts(params);
     }
 
     @Override

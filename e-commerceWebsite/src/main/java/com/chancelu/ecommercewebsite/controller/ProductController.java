@@ -1,6 +1,7 @@
 package com.chancelu.ecommercewebsite.controller;
 
 import com.chancelu.ecommercewebsite.constant.ProductCategory;
+import com.chancelu.ecommercewebsite.dto.ProductQueryParams;
 import com.chancelu.ecommercewebsite.dto.ProductRequest;
 import com.chancelu.ecommercewebsite.model.Product;
 import com.chancelu.ecommercewebsite.service.ProductService;
@@ -23,9 +24,14 @@ public class ProductController {
     public ResponseEntity<List<Product>> getProducts (
 //            選擇商品類型, 這個參數是個可選參數
             @RequestParam(required = false) ProductCategory category,
+//            關鍵字查詢，這個參數是個可選參數
             @RequestParam(required = false) String search
     ) {
-        List<Product> productList = productService.getProducts(category, search);
+        ProductQueryParams params = new ProductQueryParams();
+        params.setCategory(category);
+        params.setSearch(search);
+
+        List<Product> productList = productService.getProducts(params);
 
         return ResponseEntity.status(HttpStatus.OK).body(productList);
     }
