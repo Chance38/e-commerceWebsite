@@ -1,5 +1,6 @@
 package com.chancelu.ecommercewebsite.dao.impl;
 
+import com.chancelu.ecommercewebsite.constant.ProductCategory;
 import com.chancelu.ecommercewebsite.dao.ProductDao;
 import com.chancelu.ecommercewebsite.dto.ProductRequest;
 import com.chancelu.ecommercewebsite.model.Product;
@@ -24,11 +25,26 @@ public class ProductDaoImpl implements ProductDao {
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts() {
+    public List<Product> getProducts(ProductCategory category, String search) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
-                "created_date, last_modified_date FROM product";
+                "created_date, last_modified_date " +
+                "FROM product WHERE 1=1";
+//        WHERE 1=1 對查詢結果沒任何幫助，這裡加這句是為了讓下面的查詢條件可以自由地拼接在sql語法後面
 
         Map<String, Object> map = new HashMap<>();
+
+        if (category != null) {
+//            記得AND前一點要預留空白鍵
+            sql += " AND category = :category";
+//            category類型為Enum, 先用name method將Enum類型轉成字串, 再加進map裡
+            map.put("category", category.name());
+        }
+
+        if (search != null) {
+//            記得AND前一點要預留空白鍵, LIKE -> 模糊查詢, 在要查詢的"search"前後加%, 會搜尋名字內有包含"search"的字串
+            sql += " AND product_name LIKE :search";
+            map.put("search", "%" + search + "%");
+        }
 
         List<Product> productList = namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
