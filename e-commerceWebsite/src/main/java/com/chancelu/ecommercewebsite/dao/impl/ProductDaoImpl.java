@@ -146,12 +146,12 @@ public class ProductDaoImpl implements ProductDao {
         if (params.getCategory() != null) {
 //        記得AND前一點要預留空白鍵
             sql += " AND category = :category";
-//            category類型為Enum, 先用name method將Enum類型轉成字串, 再加進map裡
+//        category類型為Enum, 先用name method將Enum類型轉成字串, 再加進map裡
             map.put("category", params.getCategory().name());
         }
 
         if (params.getSearch() != null) {
-//         記得AND前一點要預留空白鍵, LIKE -> 模糊查詢, 在要查詢的"search"前後加%, 會搜尋名字內有包含"search"的字串
+//        記得AND前一點要預留空白鍵, LIKE -> 模糊查詢, 在要查詢的"search"前後加%, 會搜尋名字內有包含"search"的字串
             sql += " AND product_name LIKE :search";
             map.put("search", "%" + params.getSearch() + "%");
         }
